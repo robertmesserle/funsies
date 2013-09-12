@@ -1,22 +1,36 @@
 class Calc
 
-  @getPointFromAngle = ( angle = 0, distance = 0, origin = { x: 0, y: 0 } ) ->
+  @circle: Math.PI * 2
+  @origin: -Math.PI / 2
+
+  @getPointFromAngle = ( origin, angle = 0, distance = 0 ) ->
     x: distance * Math.cos( angle ) + origin.x
     y: distance * Math.sin( angle ) + origin.y
 
 class Options
 
-  width:  600
-  height: 600
+  width:      $( window ).width()
+  height:     $( window ).height()
+  lineColor:  '#9c0'
+  fillColor:  '#efd'
+  bgColor:    '#fff'
 
   constructor: ( options = {} ) ->
     # Set options
-    for key, value of options then @[ key ] = value
+    for key, value of options when value? then @[ key ] = value
     # Calculate values
-    @root       ?= x: @width / 2, y: @height / 2
+    @center     ?= x: @width / 2, y: @height / 2
     @$canvas    = $( 'canvas' )
     @canvas     = @$canvas.get( 0 )
     @context    = @canvas.getContext( '2d' )
+    @size       = Math.min( @width, @height )
+    @part       = @size / 2 / 6.25
+    @hourWidth  = @part * 3
+
+  updateSize: ->
+    $window   = $( window )
+    @width    = $window.width()
+    @height   = $window.height()
 
 class Clock
   
@@ -25,176 +39,132 @@ class Clock
     @canvas   = @options.canvas
     @context  = @options.context
     @prepareCanvas()
-    @addTextWrapper()
+    @createElements()
     setInterval @redraw, Math.round( 1000 / 20 )
     @redraw()
+    $( window ).resize =>
+      @options.updateSize()
+      @prepareCanvas()
     
-  prepareCanvas: =>
+  prepareCanvas: ->
     @options.$canvas
-      .css(  width: @options.width, height: @options.height, background: 'white' )
+      .css(  width: @options.width, height: @options.height, background: @options.bgColor )
       .attr( width: @options.width, height: @options.height )
-    
-  addTextWrapper: ->
-    offset = @options.$canvas.offset()
-    @$text = $( '<div>' ).css
-      fontFamily: 'Segoe UI Light, Helvetica Neue, sans-serif'
-      fontWeight: 100
-      position:   'absolute'
-      top:        offset.top
-      left:       offset.left
-      width:      @options.width
-      height:     @options.height
-      lineHeight: @options.height + 'px'
-      textAlign:  'center'
-      color:      '#690'
-    @$text.appendTo( document.body )
-    @$text.append(
-      @getHoursWrapper()
-      @getMinutesWrapper()
+
+  createElements: ->
+    $( document.body ).append(
+      @$hours = $( '<div>' ).css( position: 'absolute', textAlign: 'center', color: @options.lineColor, fontFamily: 'Segoe UI Light, Helvetica Neue, sans-serif', fontWeight: 100 )
+      @$mins  = $( '<div>' ).css( position: 'absolute', textAlign: 'center', color: @options.lineColor, fontFamily: 'Segoe UI Light, Helvetica Neue, sans-serif', fontWeight: 100 )
+      @$secs  = $( '<div>' ).css( position: 'absolute', textAlign: 'center', color: @options.lineColor, fontFamily: 'Segoe UI Light, Helvetica Neue, sans-serif', fontWeight: 100 )
     )
-      
-  getMinutesWrapper: ->
-    @$minutes = $( '<div>' ).css
-      fontSize: '15px'
-      position: 'absolute'
-    
-  getHoursWrapper: ->
-    @$hours = $( '<div>' ).css
-      fontSize: '25px'
-      position: 'absolute'
     
   redraw: ( now = new Date ) =>
+    msSec  = 1000
+    msMin  = msSec * 60
+    msHour = msMin * 60
+    msHalf = msHour * 12
+    msNow  = ( now.getHours() % 12 ) * msHour + now.getMinutes() * msMin + now.getSeconds() * msSec + now.getMilliseconds()
+
     @context.clearRect( 0, 0, @options.width, @options.height )
-    @drawInnerCircle()
-    # Draw hands
-    hourData = @getHourHandData( now )
-    minData  = @getMinuteHandData( now, hourData )
-    @drawHand( hourData, @$hours )
-    @drawHand( minData, @$minutes )
-    @drawSeconds( @getSecondHandData( now, minData ) )
-    @$hours.html( "#{ now.getHours() % 12 or 12 }<sub>h</sub>" )
-    @$minutes.html( "#{ now.getMinutes() }<sub>m</sub>" )
-    
-  drawInnerCircle: =>
-    @context.beginPath()
-    @context.arc( @options.root.x, @options.root.y, 15, 0, 2 * Math.PI )
-    @context.strokeStyle = "#cf0"
-    @context.stroke()
-    @context.beginPath()
-    @context.arc( @options.root.x, @options.root.y, 20, 0, 2 * Math.PI )
-    @context.strokeStyle = "#ad0"
-    @context.stroke()
-    
-  getAngle: ( total, parts ) =>
-    parts / total * Math.PI * 2 - Math.PI / 2
-    
-  getSecondHandData: ( now = new Date ) =>
-    ms = now.getSeconds() * 1000 + now.getMilliseconds()
-    {
-      angle: @getAngle( 60000, ms )
-      half:  @getAngle( 60000, ms / 2 )
-      radius: 95
-      width: 10
-      color: '#be2'
-    }
-    
-  getMinuteHandData: ( now = new Date, hourData ) =>
-    mins = now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds()
-    {
-      angle:  angle = @getAngle( 3600000, mins )
-      radius: radius = 25
-      start:  start = hourData.center
-      inner:  inner = hourData.radius
-      outer:  outer = hourData.radius + 40
-      center: Calc.getPointFromAngle( angle, outer + radius, start )
-    }
-    
-  getHourHandData: ( now = new Date ) =>
-    secs  = now.getHours() % 12 * 3600 + now.getMinutes() * 60 + now.getSeconds()
-    {
-      angle:  angle = @getAngle( 12 * 60 * 60, secs )
-      radius: radius = 30
-      inner:  inner = 20
-      outer:  outer = 120
-      start:  start = @options.root
-      center: Calc.getPointFromAngle( angle, outer + radius, start )
-    }
-    
-  getSecondHandData: ( now = new Date, minData ) ->
-    ms = now.getSeconds() * 1000 + now.getMilliseconds()
-    {
-      angle:  @getAngle( 60000, ms )
-      outer:  minData.radius
-      inner:  minData.radius - 8
-      start:  minData.center
-    }
-  
-  drawSeconds: ( data ) ->
-    @context.strokeStyle = "#ad0"
-    @context.fillStyle   = '#efd'
-    @context.lineWidth   = 1
-    @context.beginPath()
-    @context.arc( data.start.x, data.start.y, data.outer, -Math.PI / 2, data.angle )
-    @context.arc( data.start.x, data.start.y, data.outer - 5, data.angle, -Math.PI / 2, true )
-    @context.closePath()
-    @context.fill()
-    @context.stroke()
 
-  drawHandArc: ( start, inner, outer, angle ) ->
-    @context.fillStyle    = '#efd'
-    @context.strokeStyle  = "#ad0"
+    # Render Hour Hand
+    hourAngle = @getAngle( msHalf, msNow )
+    hourSize  = @options.hourWidth
+    @drawHand( @options.center, hourAngle, hourSize )
+    @$hours.html( "#{ Math.floor( msNow / msHour ) }<sub>h</sub>" ).css(
+      top:        @options.center.y - hourSize * 0.5
+      left:       @options.center.x - hourSize * 0.5
+      height:     hourSize
+      width:      hourSize
+      lineHeight: hourSize + 'px'
+      fontSize:   hourSize * 0.3 + 'px'
+    )
+
+    # Render Minute Hand
+    minuteAngle   = @getAngle( msHour, msNow % msHour )
+    minuteCenter  = Calc.getPointFromAngle( @options.center, hourAngle, hourSize )
+    minSize       = hourSize / 2
+    @drawHand( minuteCenter, minuteAngle, minSize )
+    @$mins.html( "#{ Math.floor( msNow % msHour / msMin ) }<sub>m</sub>" ).css(
+      top:        minuteCenter.y - minSize * 0.5
+      left:       minuteCenter.x - minSize * 0.5
+      height:     minSize
+      width:      minSize
+      lineHeight: minSize + 'px'
+      fontSize:   minSize * 0.3 + 'px'
+    )
+
+    # Render Second Hand
+    secondAngle   = @getAngle( msMin, msNow % msMin )
+    secondCenter  = Calc.getPointFromAngle( minuteCenter, minuteAngle, minSize )
+    secSize       = minSize / 2
+    @drawHand( secondCenter, secondAngle, secSize )
+    @$secs.html( "#{ Math.floor( msNow % msMin / msSec ) }<sub>s</sub>" ).css(
+      top:        secondCenter.y - secSize * 0.5
+      left:       secondCenter.x - secSize * 0.5
+      height:     secSize
+      width:      secSize
+      lineHeight: secSize + 'px'
+      fontSize:   secSize * 0.3 + 'px'
+    )
+
+    # Render Millisecond Hand
+    msAngle   = @getAngle( msSec, msNow % msSec )
+    msCenter  = Calc.getPointFromAngle( secondCenter, secondAngle, secSize )
+    msSize    = secSize / 2
+    @drawHand( msCenter, msAngle, msSize, true )
+    
+  getAngle: ( total, parts ) ->
+    angle = parts / total * Calc.circle + Calc.origin
+
+  drawHand: ( center, angle, size, end ) ->
+    radius    = size * 0.4
+    endpoint  = Calc.getPointFromAngle( center, angle, size )
+
+    @drawHandArc(  center, angle, size * 0.55 )
+    @drawHandLine( center, Calc.getPointFromAngle( center, Calc.origin, size * 0.65 ) ) unless end
+    @drawHandLine( center, endpoint ) unless end
+    @drawHandTip(  center, radius )
+
+  drawHandArc: ( center, angle, size ) ->
+    @context.fillStyle    = @options.fillColor
+    @context.strokeStyle  = @options.lineColor
+    @context.lineWidth    = 1
+
+    @begin()
+    @move( center )
+    @arc( center, size, Calc.origin, angle )
+    @close()
+    @fill()
+    @stroke()
+
+  drawHandLine: ( point1, point2 ) ->
+    @context.strokeStyle  = @options.lineColor
     @context.lineWidth    = 2
 
-    @context.beginPath()
-    @context.arc( start.x, start.y, outer, -Math.PI / 2, angle )
-    @context.arc( start.x, start.y, inner, angle, -Math.PI / 2, true )
-    @context.stroke()
-    @context.fill()
-
-  drawArcLine: ( start, inner, outer ) ->
-    @context.strokeStyle  = "#ad0"
-    @context.lineWidth    = 2
-
-    p1 = Calc.getPointFromAngle( -Math.PI / 2, inner, start )
-    p2 = Calc.getPointFromAngle( -Math.PI / 2, outer + 10, start )
-    @context.beginPath()
-    @context.moveTo( p1.x, p1.y )
-    @context.lineTo( p2.x, p2.y )
-    @context.stroke()
-
-  drawHandLine: ( start, angle, inner, outer ) ->
-    @context.strokeStyle  = "#ad0"
-    @context.lineWidth    = 2
-
-    p1 = Calc.getPointFromAngle( angle, inner, start )
-    p2 = Calc.getPointFromAngle( angle, outer, start )
-    @context.beginPath()
-    @context.moveTo( p1.x, p1.y )
-    @context.lineTo( p2.x, p2.y )
-    @context.stroke()
+    @begin()
+    @move( point1 )
+    @line( point2 )
+    @stroke()
 
   drawHandTip: ( center, radius ) ->
-    @context.fillStyle    = '#fff'
-    @context.strokeStyle  = "#ad0"
-    @context.lineWidth    = 2
+    @context.fillStyle = @options.bgColor
+    @context.strokeStyle = @options.lineColor
+    @context.lineWidth = 2
 
-    @context.beginPath()
-    @context.arc( center.x, center.y, radius, 0, Math.PI * 2 )
-    @context.stroke()
-    @context.fill()
+    @begin()
+    @arc( center, radius, 0, Calc.circle )
+    @fill()
+    @stroke()
 
-  repositionElement: ( $elem, center, radius ) ->
-    $elem.css
-      left:       center.x - radius
-      top:        center.y - radius
-      width:      radius * 2
-      height:     radius * 2
-      lineHeight: radius * 2 + 'px'
-      
-  drawHand: ( data, $elem ) =>
-    half = ( data.outer + data.inner ) / 2
-    @drawHandArc( data.start, data.inner, half, data.angle )
-    @drawArcLine( data.start, data.inner, half )
-    @drawHandLine( data.start, data.angle, data.inner, data.outer )
-    @drawHandTip( data.center, data.radius )
-    @repositionElement( $elem, data.center, data.radius )
+  # Canvas Helpers
+  begin:  -> @context.beginPath()
+  close:  -> @context.closePath()
+  fill:   -> @context.fill()
+  stroke: -> @context.stroke()
+
+  move: ( point ) -> @context.moveTo( point.x, point.y )
+  line: ( point ) -> @context.lineTo( point.x, point.y )
+  arc:  ( point, radius, angle1, angle2, counter ) -> @context.arc( point.x, point.y, radius, angle1, angle2, counter )
+
+$ -> new Clock
