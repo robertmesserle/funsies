@@ -9,8 +9,6 @@ class Calc
 
 class Options
 
-  width:      $( window ).width()
-  height:     $( window ).height()
   lineColor:  '#9c0'
   fillColor:  '#efd'
   bgColor:    '#fff'
@@ -19,18 +17,23 @@ class Options
     # Set options
     for key, value of options when value? then @[ key ] = value
     # Calculate values
-    @center     ?= x: @width / 2, y: @height / 2
+    @updateSize()
     @$canvas    = $( 'canvas' )
     @canvas     = @$canvas.get( 0 )
     @context    = @canvas.getContext( '2d' )
+
+  updateSize: ->
+    $window     = $( window )
+    width       = $window.width()
+    height      = $window.height()
+    return false unless width isnt @width or height isnt @height
+    @height     = height
+    @width      = width
     @size       = Math.min( @width, @height )
     @part       = @size / 2 / 6.25
     @hourWidth  = @part * 3
-
-  updateSize: ->
-    $window   = $( window )
-    @width    = $window.width()
-    @height   = $window.height()
+    @center     = x: @width / 2, y: @height / 2
+    return true
 
 class Clock
   
@@ -42,9 +45,7 @@ class Clock
     @createElements()
     setInterval @redraw, Math.round( 1000 / 20 )
     @redraw()
-    $( window ).resize =>
-      @options.updateSize()
-      @prepareCanvas()
+    $( window ).resize => if @options.updateSize() then @prepareCanvas()
     
   prepareCanvas: ->
     @options.$canvas
