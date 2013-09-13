@@ -71,7 +71,7 @@ class Clock
     hourAngle = @getAngle( msHalf, msNow )
     hourSize  = @options.hourWidth
     @drawHand( @options.center, hourAngle, hourSize )
-    @$hours.html( "#{ Math.floor( msNow / msHour ) }<sub>h</sub>" ).css(
+    @$hours.html( "#{ Math.floor( msNow / msHour ) or 12 }<sub>h</sub>" ).css(
       top:        @options.center.y - hourSize * 0.5
       left:       @options.center.x - hourSize * 0.5
       height:     hourSize
