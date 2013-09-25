@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sudoku Solver</title>
+  <script src="//coffeescript.org/extras/coffee-script.js"></script>
+  <style>
+    td { margin: 0; padding: 25px; border-right: 1px solid gray; border-bottom: 1px solid gray; }
+    tr:last-child td { border-bottom: none; }
+    td:last-child { border-right: none; }
+    td:nth-child( 3 ), td:nth-child( 6 ) { border-right-width: 3px; }
+    tr:nth-child( 3 ) td, tr:nth-child( 6 ) td { border-bottom-width: 3px; }
+  </style>
+</head>
+<body>
+  <script src="solver.coffee" type="text/coffeescript"></script>
+</body>
+</html>
