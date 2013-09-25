@@ -1,0 +1,36 @@
+body
+  table
+    float left
+    border-collapse collapse
+    tr
+      td
+        margin 0
+        padding 0
+        border-right 1px solid gray
+        border-bottom 1px solid gray
+        &:last-child
+          border-right none
+        &:nth-child( 3 )
+        &:nth-child( 6 )
+          border-right-width 3px
+        input
+          width 50px
+          height 50px
+          text-align center
+          background transparent
+          border none
+          box-shadow none
+          font 100 18px "Segoe UI Light", "Helvetica Neue", sans-serif
+          &.original
+            font bold 18px "Segoe UI", "Helvetica", sans-serif
+            background #eee
+      &:last-child
+        td
+          border-bottom none
+      &:nth-child( 3 )
+      &:nth-child( 6 )
+        td
+          border-bottom-width 3px
+  ul
+    float left
+    list-style none

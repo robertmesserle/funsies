@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Sudoku Solver</title>
-  <style>
-    body { font: 100 18px "Segoe UI Light", "Helvetica Neue", sans-serif; text-align: center; }
-    td { margin: 0; padding: 25px; border-right: 1px solid gray; border-bottom: 1px solid gray; }
-    td.original { font: bold 18px "Segoe UI", "Helvetica", sans-serif; background: #eee; }
-    tr:last-child td { border-bottom: none; }
-    td:last-child { border-right: none; }
-    td:nth-child( 3 ), td:nth-child( 6 ) { border-right-width: 3px; }
-    tr:nth-child( 3 ) td, tr:nth-child( 6 ) td { border-bottom-width: 3px; }
-  </style>
+  <script src="//codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+  <link rel="stylesheet" href="master.css"/>
 </head>
 <body>
-  <script src="solver.js"></script>
+<script src="cell.js"></script>
+<script src="collection.js"></script>
+<script src="board.js"></script>
+<script src="solver.js"></script>
 </body>
 </html>
