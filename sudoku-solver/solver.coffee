@@ -9,11 +9,11 @@ class Solver
 
   draw: ->
     html = []
-    html.push '<table>'
+    html.push '<table cellspacing="0" cellpadding="0">'
     for row in @board.rows
-      html.push '<tr>'
+      html.push "<tr>"
       for cell in row.cells
-        html.push "<td>#{ cell.value or '' }</td>"
+        html.push """<td class='#{ if cell.original then "original" else "" }'>#{ cell.value or '' }</td>"""
       html.push '</tr>'
     html.push '</table>'
     document.body.innerHTML = html.join( '' )
@@ -28,7 +28,7 @@ class Board
     @solve()
 
   solve: ->
-    for i in [ 1..3 ]
+    for i in [ 1..81 ]
       for row in @rows then row.reduce()
       for col in @cols then col.reduce()
       for block in @blocks then block.reduce()
@@ -69,7 +69,6 @@ class Collection
   reduce: ->
     @updateMatches()
     @removeMatches()
-    @checkCandidates()
     @checkNumbers()
 
   updateMatches: ->
@@ -82,14 +81,9 @@ class Collection
       for c in @matches
         cell.remove( c )
 
-  checkCandidates: ->
-    for cell in @cells when cell.candidates?.length is 1
-      cell.value = cell.candidates
-      delete cell.candidates
-
   checkNumbers: ->
     for number in @candidates
-      matches = for cell in @cells when not cell.value and cell.candidates?.indexOf( number ) >= 0 then cell
+      matches = for cell in @cells when cell.candidates?.indexOf( number ) >= 0 then cell
       if matches.length is 1
         cell = matches[ 0 ]
         cell.value = number
@@ -108,20 +102,21 @@ class Cell
   constructor: ( value ) ->
     @value = value unless isNaN value
     @candidates = '123456789' unless @value
+    @original = not @candidates
 
   remove: ( number ) ->
     @candidates = @candidates.replace( number, '' )
 
-solver = new Solver """
---- --8 --4
--84 -16 ---
---- 5-- 1--
+window.solver = new Solver """
+79- --- 3--
+--- --6 9--
+8-- -3- -76
 
-1-3 8-- 9--
-6-8 --- 4-3
---2 --9 5-1
+--- --5 --2
+--5 418 7--
+4-- 7-- ---
 
---7 --2 ---
---- 78- 26-
-2-- 3-- ---
+61- -9- --8
+--2 3-- ---
+--9 --- -54
 """
