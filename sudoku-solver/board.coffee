@@ -9,10 +9,15 @@ class Board
     @solve()
 
   solve: ->
-    for i in [ 1..81 ]
-      for row in @rows then row.reduce()
-      for col in @cols then col.reduce()
-      for block in @blocks then block.reduce()
+    while @performPass() then # No loop contents, calls @performPass() until no changes are found
+
+  performPass: ->
+    console.log 'performing pass'
+    results = []
+    results = results.concat( for row in @rows when row.reduce() then true )
+    results = results.concat( for col in @cols when col.reduce() then true )
+    results = results.concat( for block in @blocks when block.reduce() then true )
+    results.length
 
   getBlocks: ->
     for i in [ 0..8 ] then new Collection @getBlock( i )

@@ -16,11 +16,38 @@ class Solver
 
   drawButtons: ->
     $ul = $( '<ul>' ).appendTo( @$wrapper )
-    $li = $( '<li>' ).appendTo( $ul )
-    $( '<button>' )
+    do =>
+      $li = $( '<li>' ).appendTo( $ul )
+      $( '<button>' )
+        .appendTo( $li )
+        .text( 'Solve' )
+        .on( 'click', @solveBoard )
+    do =>
+      $li = $( '<li>' ).appendTo( $ul )
+      $( '<button>' )
       .appendTo( $li )
-      .text( 'Solve' )
-      .on( 'click', @solveBoard )
+      .text( 'Fill with Sample Puzzle' )
+      .on( 'click', @preFill )
+
+  preFill: =>
+    $inputs = @$wrapper.find( 'input' )
+    $inputs.eq( 0 ).val( 8 )
+    $inputs.eq( 1 ).val( 6 )
+    $inputs.eq( 4 ).val( 2 )
+    $inputs.eq( 12 ).val( 7 )
+    $inputs.eq( 16 ).val( 5 )
+    $inputs.eq( 17 ).val( 9 )
+    $inputs.eq( 31 ).val( 6 )
+    $inputs.eq( 33 ).val( 8 )
+    $inputs.eq( 37 ).val( 4 )
+    $inputs.eq( 47 ).val( 5 )
+    $inputs.eq( 48 ).val( 3 )
+    $inputs.eq( 53 ).val( 7 )
+    $inputs.eq( 64 ).val( 2 )
+    $inputs.eq( 69 ).val( 6 )
+    $inputs.eq( 74 ).val( 7 )
+    $inputs.eq( 75 ).val( 5 )
+    $inputs.eq( 77 ).val( 9 )
 
   solveBoard: =>
     values = []
@@ -32,9 +59,13 @@ class Solver
     $inputs = @$wrapper.find( 'input' )
     for cell, index in @board.cells
       $input = $inputs.eq( index )
-      $input.val( cell.value )
-      $input.attr( disabled: true )
-      $input.addClass( 'original' ) if cell.original
+      if cell.value
+        $input.val( cell.value )
+        $input.attr( disabled: true )
+        $input.addClass( 'original' ) if cell.original
+      else
+        $('<div>').addClass('pencil').text(cell.candidates.split('').join(' ')).appendTo($input.parent())
+        $input.hide()
 
   parseBoard: ( board ) ->
     new Board( board )
