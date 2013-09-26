@@ -12,7 +12,6 @@ class Board
     while @performPass() then # No loop contents, calls @performPass() until no changes are found
 
   performPass: ->
-    console.log 'performing pass'
     results = []
     results = results.concat( for row in @rows when row.reduce() then true )
     results = results.concat( for col in @cols when col.reduce() then true )

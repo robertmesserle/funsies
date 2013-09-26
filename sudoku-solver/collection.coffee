@@ -10,11 +10,6 @@ class Collection
     change = false
     change or= @removeMatches()
     change or= @checkNumbers()
-    change or= @checkCandidates()
-
-  checkCandidates: ->
-    console.log 'candidates', ( for cell in @cells when cell.candidates then cell.candidates )
-    return false
 
   updateMatches: ->
     for cell in @cells when cell.value
