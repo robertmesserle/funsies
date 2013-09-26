@@ -3,8 +3,7 @@ class Solver
 
   constructor: ->
     @$wrapper = $( '<div>' ).appendTo( document.body )
-    @drawForm()
-    @drawButtons()
+    @reset()
 
   drawForm: ->
     $table = $( '<table>' ).appendTo( @$wrapper )
@@ -26,34 +25,45 @@ class Solver
       $li = $( '<li>' ).appendTo( $ul )
       $( '<button>' )
       .appendTo( $li )
-      .text( 'Fill with Sample Puzzle' )
-      .on( 'click', @preFill )
+      .text( 'Fill with Sample Puzzle (Easy)' )
+      .on( 'click', @fillWithEasy )
+    do =>
+      $li = $( '<li>' ).appendTo( $ul )
+      $( '<button>' )
+      .appendTo( $li )
+      .text( 'Fill with Sample Puzzle (Difficult)' )
+      .on( 'click', @fillWithDifficult )
 
-  preFill: =>
+  redrawButtons: =>
+    $ul = @$wrapper.find( 'ul' ).empty()
+    do =>
+      $li = $( '<li>' ).appendTo( $ul )
+      $( '<button>' )
+      .appendTo( $li )
+      .text( 'Reset' )
+      .on( 'click', @reset )
+
+  reset: =>
+    @$wrapper.empty()
+    @drawForm()
+    @drawButtons()
+
+  fillBoard: ( board ) =>
     $inputs = @$wrapper.find( 'input' )
-    $inputs.eq( 0 ).val( 8 )
-    $inputs.eq( 1 ).val( 6 )
-    $inputs.eq( 4 ).val( 2 )
-    $inputs.eq( 12 ).val( 7 )
-    $inputs.eq( 16 ).val( 5 )
-    $inputs.eq( 17 ).val( 9 )
-    $inputs.eq( 31 ).val( 6 )
-    $inputs.eq( 33 ).val( 8 )
-    $inputs.eq( 37 ).val( 4 )
-    $inputs.eq( 47 ).val( 5 )
-    $inputs.eq( 48 ).val( 3 )
-    $inputs.eq( 53 ).val( 7 )
-    $inputs.eq( 64 ).val( 2 )
-    $inputs.eq( 69 ).val( 6 )
-    $inputs.eq( 74 ).val( 7 )
-    $inputs.eq( 75 ).val( 5 )
-    $inputs.eq( 77 ).val( 9 )
+    for c, i in board.split( '' ) when c isnt '-' then $inputs.eq( i ).val( c )
+
+  fillWithEasy: =>
+    @fillBoard '-----8--4-84-16------5--1--1-38--9--6-8---4-3--2--95-1--7--2------78-26-2--3-----'
+
+  fillWithDifficult: =>
+    @fillBoard '86--2-------7---59-------------6-8---4---------53----7----------2----6----75-9---'
 
   solveBoard: =>
     values = []
     @$wrapper.find( 'input' ).each -> values.push( $( @ ).val() or '-' )
     @board = @parseBoard( values.join( '' ) )
     @updateCells()
+    @redrawButtons()
 
   updateCells: ->
     $inputs = @$wrapper.find( 'input' )
