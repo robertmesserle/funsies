@@ -50,7 +50,8 @@ class Solver
 
   fillBoard: ( board ) =>
     $inputs = @$wrapper.find( 'input' )
-    for c, i in board.split( '' ) when c isnt '-' then $inputs.eq( i ).val( c )
+    for c, i in board.split( '' )
+      $inputs.eq( i ).val( if c is '-' then '' else c )
 
   fillWithEasy: =>
     @fillBoard '-----8--4-84-16------5--1--1-38--9--6-8---4-3--2--95-1--7--2------78-26-2--3-----'
