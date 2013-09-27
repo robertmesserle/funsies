@@ -5,48 +5,29 @@ class Solver
     @$wrapper = $( '<div>' ).appendTo( document.body )
     @reset()
 
-  drawForm: ->
-    $table = $( '<table>' ).appendTo( @$wrapper )
+  drawBoard: ->
+    $table = $( '<table>' )
     for i in [1..9]
       $row = $( '<tr>' ).appendTo( $table )
       for j in [1..9]
         $cell = $( '<td>' ).appendTo( $row )
         $( '<input>' ).attr( type: 'text' ).appendTo( $cell )
+    return $table
 
   drawButtons: ->
-    $ul = $( '<ul>' ).appendTo( @$wrapper )
-    do =>
-      $li = $( '<li>' ).appendTo( $ul )
-      $( '<button>' )
-        .appendTo( $li )
-        .text( 'Solve' )
-        .on( 'click', @solveBoard )
-    do =>
-      $li = $( '<li>' ).appendTo( $ul )
-      $( '<button>' )
-      .appendTo( $li )
-      .text( 'Fill with Sample Puzzle (Easy)' )
-      .on( 'click', @fillWithEasy )
-    do =>
-      $li = $( '<li>' ).appendTo( $ul )
-      $( '<button>' )
-      .appendTo( $li )
-      .text( 'Fill with Sample Puzzle (Difficult)' )
-      .on( 'click', @fillWithDifficult )
+    $( '<ul>' ).append(
+      $( '<li>' ).append( $( '<button>' ).text( 'Solve' ).on( 'click', @solveBoard ) )
+      $( '<li>' ).append( $( '<button>' ).text( 'Fill with Sample (Easy)' ).on( 'click', @fillWithEasy ) )
+      $( '<li>' ).append( $( '<button>' ).text( 'Fill with Sample (Difficult)' ).on( 'click', @fillWithDifficult ) )
+    )
 
   redrawButtons: =>
-    $ul = @$wrapper.find( 'ul' ).empty()
-    do =>
-      $li = $( '<li>' ).appendTo( $ul )
-      $( '<button>' )
-      .appendTo( $li )
-      .text( 'Reset' )
-      .on( 'click', @reset )
+    @$wrapper.find( 'ul' ).empty().append(
+      $( '<li>' ).append( $( '<button>' ).text( 'Reset' ).on( 'click', @reset ) )
+    )
 
   reset: =>
-    @$wrapper.empty()
-    @drawForm()
-    @drawButtons()
+    @$wrapper.empty().append( @drawBoard(), @drawButtons() )
 
   fillBoard: ( board ) =>
     $inputs = @$wrapper.find( 'input' )

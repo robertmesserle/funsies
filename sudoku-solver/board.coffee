@@ -1,15 +1,34 @@
 
 class Board
 
-  constructor: ( cells ) ->
-    @cells  = for cell in cells then new Cell( cell )
+  constructor: ( @str ) ->
+    @cells  = for cell in @str then new Cell( cell )
     @rows   = @getRows()
     @cols   = @getCols()
     @blocks = @getBlocks()
     @solve()
 
   solve: ->
-    while @performPass() then # No loop contents, calls @performPass() until no changes are found
+    while @isValid() and not @isSolved()
+      while @performPass() then # No loop contents, calls @performPass() until no changes are found
+      @guess() unless @isSolved() or not @isValid()
+
+  guess: ->
+    guess = null
+    str = do =>
+      for cell, index in @cells when cell.candidates
+        guess = cell
+        return @str.substr( 0, index ) + cell.candidates.charAt( 0 ) + @str.substr( index + 1 )
+    board = new Board( str )
+    if board.isValid()
+      guess.value = guess.candidates.charAt( 0 )
+      delete guess.candidates
+    else
+      guess.candidates = guess.candidates.substr( 1 )
+
+  isSolved: -> not ( for cell in @cells when cell.candidates then true ).length
+
+  isValid: -> not ( for cell in @cells when not cell.candidates and not cell.value then true ).length
 
   performPass: ->
     results = []
