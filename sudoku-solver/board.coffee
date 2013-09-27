@@ -1,15 +1,16 @@
 
 class Board
 
-  constructor: ( @str ) ->
+  constructor: ( @str, @depth = 0 ) ->
+    if @depth > 5 then return alert 'Not enough data to solve the puzzle.'
     @cells  = for cell in @str then new Cell( cell )
     @rows   = @getRows()
     @cols   = @getCols()
     @blocks = @getBlocks()
     @solve()
 
-  solve: ->
-    while @isValid() and not @isSolved()
+  solve: ( limit = 81 ) ->
+    while @isValid() and not @isSolved() and limit--
       while @performPass() then # No loop contents, calls @performPass() until no changes are found
       @guess() unless @isSolved() or not @isValid()
 
@@ -19,7 +20,7 @@ class Board
       for cell, index in @cells when cell.candidates
         guess = cell
         return @str.substr( 0, index ) + cell.candidates.charAt( 0 ) + @str.substr( index + 1 )
-    board = new Board( str )
+    board = new Board( str, @depth + 1 )
     if board.isValid()
       guess.value = guess.candidates.charAt( 0 )
       delete guess.candidates

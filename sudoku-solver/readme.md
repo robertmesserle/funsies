@@ -9,4 +9,4 @@ The board should automatically fill in all remaining numbers.
 
 # Demo
 
-- [http://jsbin.com/aBigOqO/2](http://jsbin.com/aBigOqO/2)
+- [http://jsbin.com/aBigOqO/5/](http://jsbin.com/aBigOqO/5/)
