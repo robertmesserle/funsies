@@ -1,0 +1,1 @@
+node -e "require('child_process').exec('http-server'); require('fs').watch('.', function () { require('child_process').exec('./build'); });"

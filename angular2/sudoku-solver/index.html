@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Angular 2 App</title>
+
+  <script src="https://github.jspm.io/jmcriffey/bower-traceur-runtime@0.0.87/traceur-runtime.js"></script>
+  <script src="https://jspm.io/system@0.16.js"></script>
+  <script src="https://code.angularjs.org/2.0.0-alpha.22/angular2.dev.js"></script>
+
+  <style>
+    html, body { font-family: sans-serif; font-size: 14px; }
+    table { border: 1px solid black; border-collapse: collapse; }
+    tr:last-of-type td { border-bottom: none; }
+    td { width: 60px; height: 60px; border-right: 1px solid black; border-bottom: 1px solid black;
+        margin: 0; padding: 0; text-align: center; vertical-align: middle; }
+    td:last-of-type { border-right: none; }
+    tr:nth-of-type(3) td, tr:nth-of-type(6) td { border-bottom: 3px solid black; }
+    td:nth-of-type(3), td:nth-of-type(6) { border-right: 3px solid black; }
+    td > a { width: 20px; line-height: 20px; float: left; text-align: center;
+        text-decoration: none; font-size: 10px; }
+    a:hover { background: #f0f0f0; }
+    td > label { font-size: 2em; color: #999; font-weight: 100; }
+    td.user { background: #f0f0f0; }
+    td.user > label { color: black; }
+    nav { overflow: hidden; }
+    nav > a { float: left; display: block; padding: 5px 10px; border: 1px solid darkblue;
+        margin: 0 10px 10px 0; border-radius: 4px; color: darkblue; background: #f0f0f0;
+        text-decoration: none; }
+    nav > label { float: left; display: block; padding: 5px 0; margin: 0 10px 10px 0;
+        border: 1px solid transparent; }
+  </style>
+
+</head>
+<body>
+
+<board></board>
+
+<script>
+  System.import('Board');
+</script>
+
+</body>
+</html>
