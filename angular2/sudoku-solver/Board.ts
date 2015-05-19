@@ -35,10 +35,15 @@ interface BoardData {
     <table>
       <tr *for="#row of data.rows">
         <td *for="#cell of row" [class.user]="cell.user">
-          <a href="javascript:;"
-              *for="#value of cell.candidates.replace(cell.value, '').split('')"
-              (click)="cell.handleClick(value)">{{value}}</a>
-          <label *if="cell.value">{{cell.value}}</label>
+          <span *for="#value of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
+              [class.invisible]="cell.candidates.indexOf(value) < 0 || cell.value || cell.focus">
+            {{value}}
+          </span>
+          <input type="number" min="1" max="9"
+            [value]="cell.value"
+            (change)="handleValue(cell.value = $event.target.value)"
+            (focus)="cell.focus = true"
+            (blur)="cell.focus = false"/>
         </td>
       </tr>
     </table>
@@ -101,6 +106,12 @@ class Board {
         }
       }
     }
+  }
+
+  handleValue(value) {
+    var board = new Board();
+    board.fillBoard(this.data.cells.map(cell => cell.value || '-').join(''));
+    board.data.cells.forEach((cell, index) => this.data.cells[index].cloneFrom(cell));
   }
 
   reset() {
@@ -188,6 +199,7 @@ class Cell {
   private _siblingRow: Cell[];
   private _siblingCol: Cell[];
   private _siblingSec: Cell[];
+  focus: boolean;
   row: number;
   col: number;
   sec: number;

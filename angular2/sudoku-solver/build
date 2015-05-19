@@ -1,3 +1,1 @@
-tsc -m commonjs -t es5 --emitDecoratorMetadata --noImplicitAny --out Board.js src/Board.ts
-rm Board.js
-mv src/Board.js .
+tsc -m commonjs -t es5 --emitDecoratorMetadata --noImplicitAny --out Board.js Board.ts
