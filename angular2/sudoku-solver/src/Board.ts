@@ -65,7 +65,8 @@ export class Board {
   handleValue(value:string) {
     var board = new Board();
     board.fillBoard(this.data.cells.map(cell => cell.value || '-').join(''));
-    board.data.cells.forEach((cell, index) => this.data.cells[index].cloneFrom(cell));
+    //board.data.cells.forEach((cell, index) => this.data.cells[index].cloneFrom(cell));
+    this.data = board.data;
   }
 
   reset() {
