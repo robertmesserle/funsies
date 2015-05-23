@@ -32,12 +32,12 @@ import {Board} from './Board';
       <tr *for="#row of board.data.rows">
         <td *for="#cell of row" [class.user]="cell.user">
           <span *for="#value of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
-              [class.invisible]="cell.candidates.indexOf(value) < 0 || cell.value || cell.focus">
+              [class.invisible]="cell.candidates.indexOf(value) < 0 || cell.value">
             {{value}}
           </span>
           <input type="number" min="1" max="9"
             [value]="cell.value"
-            (change)="board.handleValue(cell.value = $event.target.value)"
+            (input)="board.handleValue(cell, $event)"
             (focus)="cell.focus = true"
             (blur)="cell.focus = false"/>
         </td>

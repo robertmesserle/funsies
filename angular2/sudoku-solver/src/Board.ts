@@ -62,8 +62,20 @@ export class Board {
     }
   }
 
-  handleValue(value:string) {
-    var board = new Board();
+  handleValue(cell:Cell, event:Event) {
+    let element = <HTMLInputElement> event.target;
+    let value = element.value || 'x';
+    if (cell.candidates.indexOf(value || 'x') < 0) {
+      element.value = '';
+      cell.value = null;
+      this.parseBoard();
+    } else {
+      cell.value = value;
+    }
+  }
+
+  parseBoard() {
+    let board = new Board();
     board.fillBoard(this.data.cells.map(cell => cell.value || '-').join(''));
     board.data.cells.forEach((cell, index) => this.data.cells[index].cloneFrom(cell));
   }
