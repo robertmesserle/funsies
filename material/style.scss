@@ -1,3 +1,5 @@
+$primary: #3F51B5;
+$accent: #DC3845;
 $nav-width: 250px;
 html, body {
   height: 100%;
@@ -23,7 +25,7 @@ html, body {
 }
 .site-nav {
   flex: 0 0 250px;
-  background: #3F51B5;
+  background: $primary;
   color: rgba(white, 0.9);
   line-height: 40px;
   display: flex;
@@ -54,7 +56,7 @@ html, body {
       .nav-section {
         border-bottom: 1px solid rgba(white, 0.2);
         &.picker {
-          background: rgba(white, 0.15);
+          background: rgba(white, 0.1);
         }
         > h2 {
           font-weight: 300;
@@ -148,13 +150,20 @@ html, body {
       button {
         margin: 8px;
         text-align: center;
-        background: #3F51B5;
-        color: rgba(white, 0.9);
+        background: #f6f6f6;
+        color: #666;
         border: none;
         flex: 1;
         padding: 32px;
         border-radius: 3px;
         min-width: 200px;
+        &:hover {
+          background: #eee;
+          color: $primary;
+          label {
+            font-weight: 700;
+          }
+        }
         i {
           display: block;
           font-size: 42px;
@@ -163,7 +172,7 @@ html, body {
         label {
           text-transform: uppercase;
           font-size: 12px;
-          font-weight: 400;
+          font-weight: 700;
         }
       }
     }
