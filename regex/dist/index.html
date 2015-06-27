@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RegExp Generator</title>
+</head>
+<body>
+
+  <script src="main.js"></script>
+  <script>
+    console.log(generateRegex(function () {
+      return [
+        start,
+        group(
+          literal('http'),
+          literal('s').optional
+        ),
+        literal('://'),
+        literal('www.').optional,
+        set(numbers, letters, word, space).some,
+        end
+      ];
+    }, 'gi'));
+  </script>
+
+</body>
+</html>
