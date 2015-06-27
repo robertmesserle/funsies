@@ -42,6 +42,8 @@ export default class Base {
     return this.range(this.flags.min, max);
   }
   range(min, max) {
+    this.flags.min = min;
+    this.flags.max = max;
     this.flags.any = false;
     this.flags.some = false;
     this.flags.optional = false;
@@ -51,8 +53,8 @@ export default class Base {
     this.flags.optional = true;
     this.flags.any = false;
     this.flags.some = false;
-    this.flags.start = false;
-    this.flags.end = false;
+    this.flags.min = false;
+    this.flags.max = false;
     return this;
   }
   toString() {
@@ -64,15 +66,15 @@ export default class Base {
       this.close +
       (this.flags.any ? '*' : '') +
       (this.flags.optional ? '?' : '') +
-      this.range +
+      this.getRange() +
       (this.flags.some ? '+' : '');
   }
-  get range() {
+  getRange() {
     if (this.flags.min === false && this.flags.max === false) return '';
     var range = '{';
-    range += this.flags.start === false ? '' : this.flags.start;
+    range += this.flags.min === false ? '' : this.flags.min;
     range += ',';
-    range += this.flags.end === false ? '' : this.flags.end;
+    range += this.flags.max === false ? '' : this.flags.max;
     range += '}';
     return range;
   }

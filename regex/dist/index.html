@@ -11,13 +11,13 @@
     console.log(generateRegex(function () {
       return [
         start,
-        group(
-          literal('http'),
-          literal('s').optional
-        ),
-        literal('://'),
-        literal('www.').optional,
-        set(numbers, letters, word, space).some,
+        set(letters).some,
+        group( set('-_.').any, set(letters, numbers).some ).any,
+        literal('@'),
+        set(letters).some,
+        group( set('-.').any, set(letters, numbers).some ).any,
+        literal('.'),
+        set(letters).min(2),
         end
       ];
     }, 'gi'));
