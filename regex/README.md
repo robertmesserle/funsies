@@ -33,6 +33,8 @@ Into this:
 /^[a-z]+([-_\.]*[a-z0-9]+)*@[a-z]+([-\.]*[a-z0-9]+)*\.[a-z]{2,}$/gi
 ```
 
+You can try it live here: [Live Demo](http://codepen.io/robertmesserle/full/ac7ef34af1dec8542f7415b3d62d4344/).
+
 It is also smart enough to ignore case-sensitive syntax differences if the `i` flag is passed.  For
 example, if you call `set(letters)` without the `i` flag, it will return `[A-Za-z]` whereas it is
 smart enough to remove the extra set with the `i` flag, returning `[a-z]`.  Insignificant?  Yes.
