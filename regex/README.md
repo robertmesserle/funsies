@@ -37,3 +37,35 @@ It is also smart enough to ignore case-sensitive syntax differences if the `i` f
 example, if you call `set(letters)` without the `i` flag, it will return `[A-Za-z]` whereas it is
 smart enough to remove the extra set with the `i` flag, returning `[a-z]`.  Insignificant?  Yes.
 But still kind of cool.
+
+## Idea for ES6 syntax using template-strings
+
+```javascript
+generateRegex(`
+  <start />
+  <set some><letters /></set>
+  <group any>
+    <set any>-_.</set>
+    <set some>
+      <letters />
+      <numbers />
+    </set>
+  </group>
+  @
+  <set any>
+    <letters />
+  </set>
+  <group any>
+    <set any>-.</set>
+    <set some>
+      <letters />
+      <numbers />
+    </set>
+  </group>
+  .
+  <set min=2>
+    <letters />
+  </set>
+  <end />
+`);
+```
