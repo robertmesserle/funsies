@@ -1,5 +1,7 @@
 # generateRegex()
 
+[Live Demo](http://codepen.io/robertmesserle/full/ac7ef34af1dec8542f7415b3d62d4344/)
+
 This is a quick proof-of-concept tool I wrote to provide a cleaner syntax for generating complex
 regular expressions.
 
@@ -32,8 +34,6 @@ Into this:
 ```javascript
 /^[a-z]+([-_\.]*[a-z0-9]+)*@[a-z]+([-\.]*[a-z0-9]+)*\.[a-z]{2,}$/gi
 ```
-
-You can try it live here: [Live Demo](http://codepen.io/robertmesserle/full/ac7ef34af1dec8542f7415b3d62d4344/).
 
 It is also smart enough to ignore case-sensitive syntax differences if the `i` flag is passed.  For
 example, if you call `set(letters)` without the `i` flag, it will return `[A-Za-z]` whereas it is
