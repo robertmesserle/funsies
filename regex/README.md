@@ -1,7 +1,5 @@
 # generateRegex()
 
----
-
 [Live Demo](http://codepen.io/robertmesserle/full/ac7ef34af1dec8542f7415b3d62d4344/)
 
 ---
