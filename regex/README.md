@@ -1,7 +1,11 @@
 # generateRegex()
 
+[Live Demo](http://codepen.io/robertmesserle/full/ac7ef34af1dec8542f7415b3d62d4344/)
+
+---
+
 This is a quick proof-of-concept tool I wrote to provide a cleaner syntax for generating complex
-regular expressions.
+regular expressions.  It was inspired by [xeger](https://github.com/JonAbrams/xeger).
 
 It will convert this:
 
