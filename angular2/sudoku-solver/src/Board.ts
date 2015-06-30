@@ -152,7 +152,7 @@ export class Board {
       }
     }
     //-- add siblings to each cell
-    data.cells.forEach(cell => cell.siblings = data.cells.filter(c => c !== cell
+    data.cells.forEach((cell:Cell) => cell.siblings = data.cells.filter(c => c !== cell
         && (c.row == cell.row || c.col == cell.col || c.sec == cell.sec)));
     return data;
   }
