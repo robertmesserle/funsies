@@ -18,8 +18,9 @@ export class Cell {
     this.candidates = '123456789';
   }
 
-  set value (value) {
-    if (isNaN(Number(value))) return;
+  set value(value) {
+    if (isNaN(Number(value)))
+      return;
     this._value = value;
     this.candidates = '';
     this.siblings.forEach(cell => {
@@ -28,19 +29,16 @@ export class Cell {
     });
   }
 
-  get value() {
-    return this._value;
-  }
+  get value() { return this._value; }
 
   set candidates(value) {
-    if (this._candidates === value) return;
+    if (this._candidates === value)
+      return;
     this._candidates = value;
     this.siblings && this.siblings.forEach(cell => cell.checkIfLastOption());
   }
 
-  get candidates() {
-    return this._candidates;
-  }
+  get candidates() { return this._candidates; }
 
   set siblings(value) {
     this._siblings = value;
@@ -49,46 +47,46 @@ export class Cell {
     this._siblingSec = this.siblings.filter(cell => cell.sec == this.sec);
   }
 
-  get siblings() {
-    return this._siblings;
-  }
+  get siblings() { return this._siblings; }
 
-  cloneFrom(cell:Cell) {
+  cloneFrom(cell: Cell) {
     this._value = cell.value;
     this._candidates = cell.candidates;
   }
 
-  handleClick(value:string) {
+  handleClick(value: string) {
     this.user = true;
     this.value = value;
   }
 
-  removeCandidate(value:string) {
+  removeCandidate(value: string) {
     this.candidates = this.candidates.replace(value, '');
-    if (this.candidates.length == 1) this.value = this.candidates;
+    if (this.candidates.length == 1)
+      this.value = this.candidates;
     this.checkIfLastOption();
   }
 
-  static findInSet(haystack:Array<Cell>, needle:string) {
+  static findInSet(haystack: Array<Cell>, needle: string) {
     let found = false;
     for (let i in haystack) {
-      if (haystack[i].candidates.indexOf(needle) >= 0
-          || haystack[i].value === needle) found = true;
+      if (haystack[i].candidates.indexOf(needle) >= 0 ||
+          haystack[i].value === needle)
+        found = true;
     }
     return found;
   }
 
   checkIfLastOption() {
-    if (!this.siblings) return;
+    if (!this.siblings)
+      return;
     for (let index in this.candidates.split('')) {
       let candidate = this.candidates.charAt(index);
-      if (!Cell.findInSet(this._siblingRow, candidate)
-          || !Cell.findInSet(this._siblingCol, candidate)
-          || !Cell.findInSet(this._siblingSec, candidate)) {
+      if (!Cell.findInSet(this._siblingRow, candidate) ||
+          !Cell.findInSet(this._siblingCol, candidate) ||
+          !Cell.findInSet(this._siblingSec, candidate)) {
         this.value = candidate;
         return;
       }
     }
   }
-
 }

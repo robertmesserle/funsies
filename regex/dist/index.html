@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RegExp Generator</title>
+</head>
+<body>
+
+  <script src="main.js"></script>
+  <script>
+    console.log(generateRegex(function () {
+      return [
+        start,
+        set(letters).some,
+        group( set('-_.').any, set(letters, numbers).some ).any,
+        literal('@'),
+        set(letters).some,
+        group( set('-.').any, set(letters, numbers).some ).any,
+        literal('.'),
+        set(letters).min(2),
+        end
+      ];
+    }, 'gi'));
+  </script>
+
+</body>
+</html>
